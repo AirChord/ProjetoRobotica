@@ -48,89 +48,101 @@ namespace BezierSolution
 #endif
 		public void createSpline()
 		{
-			int interval = 1;
-			Vector3 homePositionTrack;
-			homePositionTrack.x = 0;
-			homePositionTrack.y = 0;
-			homePositionTrack.z = 0;
 
-			List<string> cordenadaX = new List<string>();
-			List<string> cordenadaY = new List<string>();
-			List<string> cordenadaZ = new List<string>();
+            int interval = 1;
+            Vector3 homePositionTrack;
+            homePositionTrack.x = 0;
+            homePositionTrack.y = 0;
+            homePositionTrack.z = 0;
 
-			for (int i = endPoints.Count - 1; i >= 0; i--)
-				DestroyImmediate(endPoints[i].gameObject);
-			Vector3 pointPositionInitial = new Vector3(1, 1, 1);
-			InsertNewPointAt2(0, pointPositionInitial);
+            List<string> cordenadaX = new List<string>();
+            List<string> cordenadaY = new List<string>();
+            List<string> cordenadaZ = new List<string>();
 
-			using (var reader = new StreamReader(@"C:\Users\FilipeRodriguesPerei\Spline\Assets\elipse.csv"))
-			{
-				while (!reader.EndOfStream)
-				{
-					var line = reader.ReadLine();
-					var values = line.Split(';');
+            for (int i = endPoints.Count - 1; i >= 0; i--)
+                DestroyImmediate(endPoints[i].gameObject);
+            Vector3 pointPositionInitial = new Vector3(1, 1, 1);
+            InsertNewPointAt2(0, pointPositionInitial);
+			//Get the path of the Game data folder
+			string m_Path = Application.dataPath;
+			m_Path = m_Path + "/elipse.csv";
+			//Output the Game data path to the console
+			Debug.Log("dataPath : " + m_Path);
+			using (var reader = new StreamReader(m_Path))
+            {
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(';');
 
-					cordenadaX.Add(values[3]);
-					cordenadaY.Add(values[5]);
-					cordenadaZ.Add(values[7]);
-				}
-			}
+                    cordenadaX.Add(values[3]);
+                    cordenadaY.Add(values[5]);
+                    cordenadaZ.Add(values[7]);
+                }
+            }
 
-			float fx_old = 0;
-			float fy_old = 0;
-			float fz_old = 0;
-			for (int i = 0; i < cordenadaX.Count - interval; i++)
-			{
+            float fx_old = 0;
+            float fy_old = 0;
+            float fz_old = 0;
+            for (int i = 0; i < cordenadaX.Count - interval; i++)
+            {
 
-				cordenadaX[i] = cordenadaX[i].Replace('.', ',');
-				cordenadaY[i] = cordenadaY[i].Replace('.', ',');
-				cordenadaZ[i] = cordenadaZ[i].Replace('.', ',');
+                cordenadaX[i] = cordenadaX[i].Replace('.', ',');
+                cordenadaY[i] = cordenadaY[i].Replace('.', ',');
+                cordenadaZ[i] = cordenadaZ[i].Replace('.', ',');
 
-				float fx = float.Parse(cordenadaX[i]);
-				float fy = float.Parse(cordenadaY[i]);
-				float fz = float.Parse(cordenadaZ[i]);
+                float fx = float.Parse(cordenadaX[i]);
+                float fy = float.Parse(cordenadaY[i]);
+                float fz = float.Parse(cordenadaZ[i]);
 
 
-				if (i == 0)
-				{
-					homePositionTrack.x = fx;
-					homePositionTrack.y = fy;
-					homePositionTrack.z = fz;
-					fx = 0;
-					fy = 0;
-					fz = 0;
-				}
-				else
-				{
-					if (Math.Abs(fx-fx_old) > 2)
+                if (i == 0)
+                {
+                    homePositionTrack.x = fx;
+                    homePositionTrack.y = fy;
+                    homePositionTrack.z = fz;
+                    fx = 0;
+                    fy = 0;
+                    fz = 0;
+                }
+                else
+                {
+                    if (Math.Abs(fx - fx_old) > 2)
                     {
-						Vector3 pointPosition = new Vector3(homePositionTrack.x - fx, homePositionTrack.y - fy, homePositionTrack.z - fz);
-						InsertNewPointAt2(endPoints.Count, pointPosition);
-						Refresh();
-					}
-				//	else
-				//		Debug.LogError("bbbbbbbbbbbbbbbbbbbbbbbbb "+ fx);
+                        Vector3 pointPosition = new Vector3(homePositionTrack.x - fx, homePositionTrack.y - fy, homePositionTrack.z - fz);
+                        InsertNewPointAt2(endPoints.Count, pointPosition);
+                        Refresh();
+                    }
+                    //	else
+                    //		Debug.LogError("bbbbbbbbbbbbbbbbbbbbbbbbb "+ fx);
 
-				}
-				fx_old = fx;
-				fy_old = fy;
-				fz_old = fz;
-			}
-			RemovePointAt(0);
-			RemovePointAt(1);
+                }
+                fx_old = fx;
+                fy_old = fy;
+                fz_old = fz;
+            }
+            RemovePointAt(0);
+            RemovePointAt(1);
 
-			//GameObject.Find("TrackBuilder").BuildTrack();
+            //GameObject.Find("TrackBuilder").BuildTrack();
 
 
-			TrackBuilder trackBuilderScript = (TrackBuilder)GameObject.Find("Track");//(TrackBuilder)target;
-			
-			trackBuilderScript.BuildTrack();
-			
-		}
+            //TrackBuilder trackBuilderScript = (TrackBuilder)GameObject.Find("Track");//(TrackBuilder)target;
 
-		public string[] readFile()
+            //trackBuilderScript.BuildTrack();
+
+        }
+
+        public string[] readFile()
 		{
-			string[] lines = File.ReadAllLines(@"C:\Users\FilipeRodriguesPerei\Spline\Assets\elipse.txt");
+			string m_Path;
+			//Get the path of the Game data folder
+			m_Path = Application.dataPath;
+
+			//Output the Game data path to the console
+			Debug.Log("dataPath : " + m_Path);
+			//m_Path = m_Path + "/elipse.txt";
+			string[] lines = File.ReadAllLines(m_Path + "/elipse.txt");
 			return lines;
 		}
 		public void Initialize( int endPointsCount )
