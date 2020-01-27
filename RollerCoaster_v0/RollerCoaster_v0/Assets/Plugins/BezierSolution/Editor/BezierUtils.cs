@@ -23,7 +23,9 @@ namespace BezierSolution
 		private const string PRECEDING_CONTROL_POINT_LABEL = "  <--";
 		private const string FOLLOWING_CONTROL_POINT_LABEL = "  -->";
 
-		[MenuItem( "GameObject/Bezier Spline", priority = 35 )]
+		
+
+	[MenuItem( "GameObject/Bezier Spline", priority = 35 )]
 		static void NewSpline()
 		{
 			GameObject spline = new GameObject( "BezierSpline", typeof( BezierSpline ) );
@@ -149,6 +151,12 @@ namespace BezierSolution
 
 				spline.createSpline();
 				SceneView.RepaintAll();
+			}
+
+			//TrackBuilder trackBuilderScript = (TrackBuilder)target;
+			if (GUILayout.Button("Generate Track"))
+			{
+				//trackBuilderScript.BuildTrack();
 			}
 
 			GUI.color = c;
