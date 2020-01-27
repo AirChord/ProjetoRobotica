@@ -124,8 +124,8 @@ public class TrackBuilder : MonoBehaviour
 
         spline.AutoConstructSpline();
 
-
-        //vr.BuildRollercoasterTrack(gameObject, splineRoot, leftRailPrefab, rightRailPrefab, crossBeamPrefab, resolution);
+        
+        vr.BuildRollercoasterTrack(gameObject, GameObject.Find("BezierSpline"), leftRailPrefab, rightRailPrefab, crossBeamPrefab, resolution);
     }
 
 
