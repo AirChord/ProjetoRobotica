@@ -33,7 +33,7 @@ public class Teste : MonoBehaviour
         if (Input.GetKey("s"))
         {
             Debug.Log("sending");
-            com.Send("tyu");
+            com.Send("$OV_PRO", 257); //$POS_ACT
         }
     }
 }

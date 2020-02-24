@@ -101,32 +101,53 @@ public class Client //: MonoBehaviour
     }
 
     /// <summary>
-    /// Start sending process
+    /// Start sending process (request var information)
     /// </summary>
-    /// <param name="message"></param>
-    public void Send(string message)
+    /// <param name="var"></param>
+    /// <param name="value"></param>
+    /// <param name="idMsg"></param>
+    public void Send(string var,  int idMsg)
     {
         Debug.Log("startSending");
 
-        string var = "$POS_ACT";
+        int lunghezza, varNameLen;
+        byte var_hByte, var_lByte, msg_hByte, msg_lByte;
+        byte hByteMsg, lByteMsg;
+
+
+        // Message ID ( MAX: 0xFFFF )
+        hByteMsg = Byte.Parse(((idMsg & 0xff00) >> 8).ToString());
+        lByteMsg = Byte.Parse((idMsg & 0x00ff).ToString());
+
+        //var length
+        varNameLen = var.Length;
+        var_hByte =  Byte.Parse(((varNameLen & 0xff00) >> 8).ToString());
+        var_lByte = Byte.Parse((varNameLen & 0x00ff).ToString());
+
+        lunghezza = 2 + 1 + varNameLen;
+        msg_hByte = Byte.Parse(((lunghezza & 0xff00) >> 8).ToString());
+        msg_lByte = Byte.Parse((lunghezza & 0x00ff).ToString());
+
+
+
+        //var = "$POS_ACT"; //To remove
 
         byte[] buffer =  {
-            0x00, //message ID
-            0x00, //message ID
-            0x00, //length
-            0x0B, //length
+            hByteMsg, //message ID
+            lByteMsg, //message ID
+            msg_hByte, //MSG length
+            msg_lByte, //MSG length
             0x00, //0 - read, 1 - write
-            0x00, //next var length
-            0x08, //next var length
+            var_hByte, //next var length
+            var_lByte, //next var length
             };
         byte[] b= System.Text.Encoding.UTF8.GetBytes(var);
 
-        Byte[] finalMess = new byte[buffer.Length + b.Length];
+        byte[] finalMess = new byte[buffer.Length + b.Length];
         System.Buffer.BlockCopy(buffer, 0, finalMess, 0, buffer.Length);
         System.Buffer.BlockCopy(b, 0, finalMess, buffer.Length, b.Length);
 
-
-        //System.Text.Encoding.UTF8.GetBytes(message);
+        
 
         if (!this._socket.Connected)
         {
