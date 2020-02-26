@@ -67,21 +67,12 @@ public class Client //: MonoBehaviour
             Array.Copy(receiveBuffer, _data, _byteLenght);
             //string newMessage = System.Text.Encoding.UTF8.GetString(_data, 0, _byteLenght);
             Debug.Log("Received data: ");
-            Debug.Log(BitConverter.ToString(_data));
-
-            Debug.Log("Message conv: ");
             byte[] mesRes = new byte[_data.Length];
             System.Buffer.BlockCopy(_data, 8, mesRes, 0, _data.Length-8);
-            Debug.Log("M");
-
-            //System.Array.Copy(_data, 8, mesRes, 0, _data.Length);
-
-
+           
             //string newMessage = System.Text.Encoding.Default.GetString(mesRes);
-            Debug.Log("Ai: " + Encoding.ASCII.GetString(mesRes) + " !");
-           // Debug.Log("Message conv: ");
-
-
+            Debug.Log("Message: " + Encoding.ASCII.GetString(mesRes) + " END message!");
+         
             readStream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
         }
         catch
@@ -129,9 +120,6 @@ public class Client //: MonoBehaviour
         msg_lByte = Byte.Parse((lunghezza & 0x00ff).ToString());
 
 
-
-        //var = "$POS_ACT"; //To remove
-
         byte[] buffer =  {
             hByteMsg, //message ID
             lByteMsg, //message ID
@@ -155,15 +143,80 @@ public class Client //: MonoBehaviour
             return;
         }
 
-        //writeStream = this._socket.GetStream();
-        //writeStream.BeginWrite(buffer, 0, buffer.Length, (asyncWriteResult) =>
-        //{
-        //        //Console.Write("w");
-        //        writeStream.EndWrite(asyncWriteResult);
-        //        //src.BeginRead(buffer, 0, buffer.Length, cbk, null);
-        //    }, null);
-        readStream.BeginWrite(finalMess, 0, finalMess.Length, WriteCallback, null);
+      readStream.BeginWrite(finalMess, 0, finalMess.Length, WriteCallback, null);
     }
+
+    /// <summary>
+    /// Start sending process (Write var information)
+    /// </summary>
+    /// <param name="var"></param>
+    /// <param name="value"></param>
+    /// <param name="idMsg"></param>
+    public void Send(string var, string value, int idMsg)
+    {
+        Debug.Log("startSending");
+
+        int lunghezza, varNameLen, valLen;
+        byte var_hByte, var_lByte, msg_hByte, msg_lByte, val_hByte, val_lByte;
+        byte hByteMsg, lByteMsg;
+
+
+        // Message ID ( MAX: 0xFFFF )
+        hByteMsg = Byte.Parse(((idMsg & 0xff00) >> 8).ToString());
+        lByteMsg = Byte.Parse((idMsg & 0x00ff).ToString());
+
+        //var length
+        varNameLen = var.Length;
+        var_hByte = Byte.Parse(((varNameLen & 0xff00) >> 8).ToString());
+        var_lByte = Byte.Parse((varNameLen & 0x00ff).ToString());
+
+        //Value length
+        valLen = value.Length;
+        val_hByte = Byte.Parse(((valLen & 0xff00) >> 8).ToString());
+        val_lByte = Byte.Parse((valLen & 0x00ff).ToString());
+
+
+
+        lunghezza = 2 + 1 + varNameLen + 2 + valLen; //MSG ID X2, R/W, VarLength, value Len X2, value length
+        msg_hByte = Byte.Parse(((lunghezza & 0xff00) >> 8).ToString());
+        msg_lByte = Byte.Parse((lunghezza & 0x00ff).ToString());
+
+
+        byte[] buffer =  {
+            hByteMsg, //message ID
+            lByteMsg, //message ID
+            msg_hByte, //MSG length
+            msg_lByte, //MSG length
+            0x01, //0 - read, 1 - write
+            var_hByte, //next var length
+            var_lByte, //next var length
+            };
+        byte[] b = System.Text.Encoding.UTF8.GetBytes(var);
+        byte[] valLenArray =  {
+                val_hByte,
+                val_lByte
+            };
+        byte[] encValue = System.Text.Encoding.UTF8.GetBytes(value);
+        byte[] finalMsg = new byte[buffer.Length + b.Length + valLenArray.Length + encValue.Length];
+
+
+        System.Buffer.BlockCopy(buffer, 0, finalMsg, 0, buffer.Length);
+        System.Buffer.BlockCopy(b, 0, finalMsg, buffer.Length, b.Length);     
+        System.Buffer.BlockCopy(valLenArray, 0, finalMsg, buffer.Length + b.Length, valLenArray.Length);       
+        System.Buffer.BlockCopy(encValue, 0, finalMsg, buffer.Length + b.Length + valLenArray.Length, encValue.Length);
+               
+        if (!this._socket.Connected)
+        {
+            Debug.Log("SocketnotConnected!");
+            return;
+        }
+
+
+        readStream.BeginWrite(finalMsg, 0, finalMsg.Length, WriteCallback, null);
+    }
+
+
+
     /// <summary>
     /// End send process
     /// </summary>

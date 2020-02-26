@@ -32,8 +32,11 @@ public class Teste : MonoBehaviour
 
         if (Input.GetKey("s"))
         {
-            Debug.Log("sending");
-            com.Send("$OV_PRO", 257); //$POS_ACT
+            Debug.Log("A mudar RC_P1");
+            com.Send("RC_P1", "{E6POS:X 0.0, Y 1.1, Z 2.2, A 3.3, B 4.4, C 5.5, S 6, T 50, E1 0.0, E2 0.0, E3 0.0, E4 0.0, E5 0.0, E6 0.0}", 257); //$POS_ACT
+
+            //Debug.Log("A ler RC_P1");
+            //com.Send("XStatus", 112);
         }
     }
 }
