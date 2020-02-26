@@ -9,9 +9,15 @@ public class TrackBuilderEditor : Editor
         DrawDefaultInspector();
 
         TrackBuilder trackBuilderScript = (TrackBuilder)target;
+
         if (GUILayout.Button("Generate Track"))
         {
             trackBuilderScript.BuildTrack();
+        }
+
+        if (GUILayout.Button("Generate Trees"))
+        {
+            trackBuilderScript.TreeBuilder();
         }
     }
 }

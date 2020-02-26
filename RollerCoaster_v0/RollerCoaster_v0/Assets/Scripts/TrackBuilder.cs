@@ -13,6 +13,7 @@ public class TrackBuilder : MonoBehaviour
     public GameObject leftRailPrefab;
     public GameObject rightRailPrefab;
     public GameObject crossBeamPrefab;
+    public GameObject tree;
     
 
     public float resolution = 0.005f;
@@ -23,6 +24,12 @@ public class TrackBuilder : MonoBehaviour
     void Start()
     {
 
+    }
+
+    public void TreeBuilder()
+    {
+        Vector3 position = new Vector3(UnityEngine.Random.Range(-500.0f, 500.0f), 0, UnityEngine.Random.Range(-500.0f, 500.0f));
+        Instantiate(tree, position, Quaternion.identity);
     }
     public void BuildTrack()
     {
