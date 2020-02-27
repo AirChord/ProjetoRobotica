@@ -61,7 +61,7 @@ public class TrackBuilder : MonoBehaviour
         List<string> cordenadaZ = new List<string>();
 
         string m_Path = Application.dataPath;
-        m_Path = m_Path + "/elipse.csv";
+        m_Path = m_Path + "/kukaPoints.txt";
         //Output the Game data path to the console
         Debug.Log("dataPath : " + m_Path);
         using (var reader = new StreamReader(m_Path))
@@ -69,11 +69,14 @@ public class TrackBuilder : MonoBehaviour
             while (!reader.EndOfStream)
             {
                 var line = reader.ReadLine();
-                var values = line.Split(';');
+                var values = line.Split(',',' ');
+                Debug.Log(values[2].ToString());
+                Debug.Log(values[5].ToString());
+                Debug.Log(values[8].ToString());
 
-                cordenadaX.Add(values[3]);
-                cordenadaY.Add(values[5]);
-                cordenadaZ.Add(values[7]);
+                cordenadaX.Add(values[2]);
+                cordenadaZ.Add(values[5]);
+                cordenadaY.Add(values[8]);
             }
         }
 
@@ -112,7 +115,8 @@ public class TrackBuilder : MonoBehaviour
             {
                 if (Math.Abs(fx - fx_old) > 2)
                 {
-                    Vector3 pointPosition = new Vector3(homePositionTrack.x - fx, homePositionTrack.y - fy, homePositionTrack.z - fz);
+                    Vector3 pointPosition = new Vector3(fx-homePositionTrack.x, fy-homePositionTrack.y, fz- homePositionTrack.z);
+                    //Vector3 pointPosition = new Vector3(fx, fy, fz);
                     spline.InsertNewPointAt2(spline.GetNumPoints(), pointPosition);
                     spline.Refresh();
                     

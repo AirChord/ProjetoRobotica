@@ -18,12 +18,14 @@ public class Client //: MonoBehaviour
     private NetworkStream readStream;
     private NetworkStream writeStream;
     private byte[] receiveBuffer;
+    CSVWriter writer;
 
     /// <summary>
     /// Start connecting to Server
     /// </summary>
     public void Connect()
     {
+        writer = new CSVWriter();
         Debug.Log("TryConnect");
         this._socket = new TcpClient();
         receiveBuffer = new byte[dataBufferSize];
@@ -45,6 +47,7 @@ public class Client //: MonoBehaviour
         }
         this._socket.NoDelay = true;    //parameter to accelerate transmission
         readStream = this._socket.GetStream();
+        Debug.Log("Connected!");
         readStream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
     }
 
@@ -72,6 +75,9 @@ public class Client //: MonoBehaviour
            
             //string newMessage = System.Text.Encoding.Default.GetString(mesRes);
             Debug.Log("Message: " + Encoding.ASCII.GetString(mesRes) + " END message!");
+            string saved = Encoding.ASCII.GetString(mesRes);
+            
+            writer.addRecord(saved);
          
             readStream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
         }
