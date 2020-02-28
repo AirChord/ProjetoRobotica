@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AStatus //: MonoBehaviour
 {
-    public static int sceneNumber = 0;
+    public static int sceneNumber;
     public static float speed = 100f;
 
 

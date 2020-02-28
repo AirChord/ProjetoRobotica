@@ -12,12 +12,16 @@ public class SplineFollower : MonoBehaviour
     public float speed;
     private bool start = false;
     //tcpSocket conn;
+    TrackBuilder builder;
 
     private VR vr;
     // Use this for initialization
     void Start()
     {
         vr = new VR();
+        AStatus.sceneNumber = 2;
+        builder = new TrackBuilder();
+        builder.BuildTrack();
         
     }
 
