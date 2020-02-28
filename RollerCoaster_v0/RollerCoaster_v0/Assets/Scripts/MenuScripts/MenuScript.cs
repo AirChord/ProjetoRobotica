@@ -18,10 +18,11 @@ public class MenuScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        this.loadingImage1.SetActive(false);
+        //this.loadingImage1.SetActive(false);
         com = new Client();
         //tclient = new TcpClient();
         com.Connect();
+        
     }
 
     // Update is called once per frame
@@ -33,12 +34,15 @@ public class MenuScript : MonoBehaviour
     public void ConfByKukaPressed()
     {
         this.loadingImage1.SetActive(true);
+
+
         writer = new CSVWriter();
         writer.createNewFile();
         //writer.addRecord("feefef;egheohge");
+        com.Send("startFun", "TRUE",messID);
 
-        
 
+        AStatus.sceneNumber = 1;
         getPoints = true;
         
 
@@ -63,6 +67,7 @@ public class MenuScript : MonoBehaviour
                 {
                     getPoints = false;
                     com.Disconnect();
+                    this.loadingImage1.SetActive(false);
                 }
             }
         }

@@ -75,10 +75,12 @@ public class Client //: MonoBehaviour
            
             //string newMessage = System.Text.Encoding.Default.GetString(mesRes);
             Debug.Log("Message: " + Encoding.ASCII.GetString(mesRes) + " END message!");
-            string saved = Encoding.ASCII.GetString(mesRes);
             
-            writer.addRecord(saved);
-         
+            if (AStatus.sceneNumber == 1)
+            {
+                string saved = Encoding.ASCII.GetString(mesRes);
+                writer.addRecord(saved);
+            }
             readStream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
         }
         catch
