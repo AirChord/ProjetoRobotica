@@ -35,11 +35,12 @@ public class TrackBuilder : MonoBehaviour
     }
     public bool BuildTrack()
     {
+        Debug.Log("Start Creating");
         ////////////////////////////////////////////////
         /////TEste
         ///
-        try
-        {
+        //try
+        //{
 
             
             // Check if a BezierSpline already exists
@@ -134,22 +135,27 @@ public class TrackBuilder : MonoBehaviour
                 fy_old = fy;
                 fz_old = fz;
             }
-
+            Debug.Log("Spline Done");
             spline.RemovePointAt(0);
             spline.RemovePointAt(1);
 
             spline.AutoConstructSpline();
 
-            
+
+            leftRailPrefab = (GameObject)Resources.Load("prefabs/Left Rail", typeof(GameObject));
+            rightRailPrefab = (GameObject)Resources.Load("prefabs/Right Rail", typeof(GameObject));
+            crossBeamPrefab = (GameObject)Resources.Load("prefabs/CrossBeam", typeof(GameObject));
+
+
             vr.BuildRollercoasterTrack(GameObject.Find("Track"), GameObject.Find("BezierSpline"), leftRailPrefab, rightRailPrefab, crossBeamPrefab, resolution);
             cart = GameObject.Find("Rollercoaster");
             cart.transform.Translate(0, 3, 0);
             return true;
-        }
-        catch
-        {
-            return false;
-        }
+        //}
+        //catch
+        //{
+        //    return false;
+        //}
     }
 
 

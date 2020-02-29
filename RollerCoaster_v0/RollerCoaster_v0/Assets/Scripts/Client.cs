@@ -75,12 +75,28 @@ public class Client //: MonoBehaviour
            
             //string newMessage = System.Text.Encoding.Default.GetString(mesRes);
             Debug.Log("Message: " + Encoding.ASCII.GetString(mesRes) + " END message!");
-            
-            if (AStatus.sceneNumber == 1)
+            string saved;
+
+
+            switch (AStatus.sceneNumber)
             {
-                string saved = Encoding.ASCII.GetString(mesRes);
-                writer.addRecord(saved);
+                case 0:
+                    AStatus.sceneNumber = 1;
+                    break;
+                case 1:
+                    saved = Encoding.ASCII.GetString(mesRes);
+                    writer.addRecord(saved);
+                    break;
+                case 2:
+                    saved = Encoding.ASCII.GetString(mesRes);
+                    writer.addRecord(saved);
+                    AStatus.sceneNumber = 0;
+                    break;
+                default:
+                    break;
+
             }
+            
             readStream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
         }
         catch

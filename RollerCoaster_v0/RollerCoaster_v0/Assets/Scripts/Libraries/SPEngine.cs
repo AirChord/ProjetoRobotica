@@ -437,7 +437,7 @@ namespace SPEngine
         }
 
 
-        public void MoveAlongSpline(GameObject splineGameObject, GameObject objectToMove, float speed, int travelMode)
+        public bool MoveAlongSpline(GameObject splineGameObject, GameObject objectToMove, float speed, int travelMode)
         {
             BezierSpline spline = splineGameObject.GetComponent<BezierSpline>();
             float targetSpeed = (isGoingForward) ? speed : -speed;
@@ -481,7 +481,10 @@ namespace SPEngine
                     }
 
                     if (travelMode == TRAVEL_MODE_ONCE)
-                        progress = 1f;
+                    {
+                        progress = 0f;
+                        return true;
+                    }
                     else if (travelMode == TRAVEL_MODE_LOOP)
                         progress -= 1f;
                     else
@@ -506,7 +509,10 @@ namespace SPEngine
                     }
 
                     if (travelMode == TRAVEL_MODE_ONCE)
+                    {
                         progress = 0f;
+                    }
+
                     else if (travelMode == TRAVEL_MODE_LOOP)
                         progress += 1f;
                     else
@@ -520,6 +526,7 @@ namespace SPEngine
                     onPathCompletedCalledAt0 = false;
                 }
             }
+            return false;
         }
 
         public void UseOculusPlayerController()

@@ -11,7 +11,7 @@ public class MenuScript : MonoBehaviour
     bool getPoints = false;
     float timer = 1.0f;
     int messID = 0;
-    int numPoints = 50;
+    int numPoints = 40;
     CSVWriter writer;
 
 
@@ -30,6 +30,7 @@ public class MenuScript : MonoBehaviour
     public void StartRide(string LevelName)
     {
         SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
+        com.Disconnect();
     }
 
     public void ConfByKukaPressed()
@@ -60,7 +61,6 @@ public class MenuScript : MonoBehaviour
         
         if (getPoints)
         {
-            AStatus.sceneNumber = 1;
             if (!com._socket.Connected)
             {
                 

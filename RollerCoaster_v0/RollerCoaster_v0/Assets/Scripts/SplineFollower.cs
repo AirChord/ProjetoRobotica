@@ -14,15 +14,20 @@ public class SplineFollower : MonoBehaviour
     //tcpSocket conn;
     TrackBuilder builder;
 
+    Client com; //object of costum class Client, responsible for tcp communication
+
     private VR vr;
     // Use this for initialization
     void Start()
     {
         vr = new VR();
-        AStatus.sceneNumber = 2;
+        AStatus.sceneNumber = 3;
         builder = new TrackBuilder();
         builder.BuildTrack();
-        
+        com = new Client();
+        //tclient = new TcpClient();
+        com.Connect();
+
     }
 
     
@@ -36,12 +41,19 @@ public class SplineFollower : MonoBehaviour
         if (Input.GetKey("d"))
         {
             //TCP.instance.ConnectToServer();
-            start = true;
+            start = true; 
+            com.Send("startFun", "TRUE", 10);
         }
 
         if (start)
         {
-            vr.MoveAlongSpline(splineRoot1, gameObject, speed, VR.TRAVEL_MODE_ONCE);
+            splineRoot1 = GameObject.Find("BezierSpline");
+            speed = 25;
+            bool stat= vr.MoveAlongSpline(splineRoot1, gameObject, speed, VR.TRAVEL_MODE_ONCE);
+            if (stat == true)
+            {
+                start = false;
+            }
         }
         
 
@@ -50,6 +62,7 @@ public class SplineFollower : MonoBehaviour
     protected void OnApplicationQuit()
     {
         //conn.Close();
+        com.Disconnect();
     }
 
     
